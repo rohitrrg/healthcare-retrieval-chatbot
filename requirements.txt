@@ -1,0 +1,10 @@
+streamlit
+transformers
+accelerate
+langchain
+langchain_community
+langchain_core
+bitsandbytes
+sentence-transformers
+faiss-cpu
+sentencepiece
