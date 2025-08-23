@@ -25,15 +25,15 @@ jobs:
         uses: docker/login-action@v2
         with:
           registry: dockerimagesrohit.azurecr.io/
-          username: ${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_7F65273A4F5C4AE481E604463BAD56F4 }}
-          password: ${{ secrets.AZUREAPPSERVICE_CONTAINERPASSWORD_C30F4E6E3F5A4E0A8512AF04684FF850 }}
+          username: ${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_539133B187D846ECACD6BE1226F2579E }}
+          password: ${{ secrets.AZUREAPPSERVICE_CONTAINERPASSWORD_5029F450F6754BD48C7B093593C0DE92 }}
 
       - name: Build and push container image to registry
         uses: docker/build-push-action@v3
         with:
           context: .
           push: true
-          tags: dockerimagesrohit.azurecr.io/${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_7F65273A4F5C4AE481E604463BAD56F4 }}/healthragimage:${{ github.sha }}
+          tags: dockerimagesrohit.azurecr.io/${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_539133B187D846ECACD6BE1226F2579E }}/healthragimage:${{ github.sha }}
           file: ./Dockerfile
 
   deploy:
@@ -50,9 +50,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_812FE408882942119F55AF976562A0A8 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A1368C2BC06D4F218FB40FF76A896F0E }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_2B0C041CE2364683BCC6582AAF720BF2 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_173A5E1708DC498591A642054F821920 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_B2477D0010BC421C8737258ECC144B3E }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_31706E8EAED142EB93953636C3133B45 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -60,5 +60,5 @@ jobs:
         with:
           app-name: 'healthcare-rag'
           slot-name: 'Production'
-          images: 'dockerimagesrohit.azurecr.io/${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_7F65273A4F5C4AE481E604463BAD56F4 }}/healthragimage:${{ github.sha }}'
+          images: 'dockerimagesrohit.azurecr.io/${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_539133B187D846ECACD6BE1226F2579E }}/healthragimage:${{ github.sha }}'
           
