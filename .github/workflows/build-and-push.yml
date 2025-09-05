@@ -1,7 +1,7 @@
 name: Build & Push to ACR
 on:
   push:
-    branches: [ main ]   # adjust
+    branches: [ master ]   # adjust
 env:
   IMAGE_NAME: healthcare-rag
   ACR_LOGIN_SERVER: ${{ vars.ACR_LOGIN_SERVER }}   # e.g. myacr.azurecr.io
