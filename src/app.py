@@ -12,7 +12,7 @@ TOP_P = 0.9
 INDEX_DIR = "data/faiss_index"
 
 
-st.set_page_config(page_title="Healthcare RAG Chatbot", page_icon="🩺", layout="centered")
+st.set_page_config(page_title="Healthcare RAG System", page_icon="🩺", layout="centered")
 st.title("🩺  Healthcare Chatbot with Medical Document Retrieval")
 
 @st.cache_resource(show_spinner=True, )
@@ -29,7 +29,7 @@ llm = load_llm()
 chain = Chain().build_chain(vector_store, llm)
 
 with st.form("qa_form"):
-    user_q = st.text_area("Ask a medical question (non-emergency):", height=120, placeholder="e.g., What are early symptoms of dehydration?")
+    user_q = st.text_area("Ask a medical question (non-emergency):", value="What are early symptoms of dehydration?", height=120, placeholder="e.g., What are early symptoms of dehydration?")
     submitted = st.form_submit_button("Ask")
 
 if submitted and user_q.strip():

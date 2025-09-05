@@ -2,7 +2,7 @@ import pandas as pd
 import os
 from langchain_community.document_loaders import DataFrameLoader
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
 INDEX_DIR = os.environ.get("INDEX_DIR", "data/faiss_index")
 
