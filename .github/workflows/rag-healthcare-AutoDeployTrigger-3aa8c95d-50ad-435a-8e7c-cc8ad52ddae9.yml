@@ -1,0 +1,49 @@
+name: Trigger auto deployment for rag-healthcare
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ master ]
+    paths:
+    - '**'
+    - '.github/workflows/rag-healthcare-AutoDeployTrigger-3aa8c95d-50ad-435a-8e7c-cc8ad52ddae9.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:      
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions: 
+      id-token: write #This is required for requesting the OIDC JWT Token
+      contents: read #Required when GH token is used to authenticate with private repo
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.RAGHEALTHCARE_AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.RAGHEALTHCARE_AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.RAGHEALTHCARE_AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          appSourcePath: ${{ github.workspace }}
+          _dockerfilePathKey_: _dockerfilePath_
+          _targetLabelKey_: _targetLabel_
+          registryUrl: dockerregistries.azurecr.io
+          registryUsername: ${{ secrets.RAGHEALTHCARE_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.RAGHEALTHCARE_REGISTRY_PASSWORD }}
+          containerAppName: rag-healthcare
+          resourceGroup: container-app-grp
+          imageToBuild: dockerregistries.azurecr.io/rag-healthcare:${{ github.sha }}
+          _buildArgumentsKey_: |
+            _buildArgumentsValues_
+
+
