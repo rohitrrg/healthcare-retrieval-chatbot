@@ -1,0 +1,63 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy container app to Azure Web App - HealthcareRAGChatBot
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read #This is required for actions/checkout
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to container registry
+        uses: docker/login-action@v2
+        with:
+          registry: dockerprojectimages.azurecr.io/
+          username: ${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_3F89FEDB22B44B3986FE1836A61CD514 }}
+          password: ${{ secrets.AZUREAPPSERVICE_CONTAINERPASSWORD_6BFCEEE58F694E4AA17D56475C0C1AA1 }}
+
+      - name: Build and push container image to registry
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: dockerprojectimages.azurecr.io/${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_3F89FEDB22B44B3986FE1836A61CD514 }}/healthcare-rag:${{ github.sha }}
+          file: ./Dockerfile
+
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write #This is required for requesting the JWT
+      contents: read #This is required for actions/checkout
+
+    needs: build
+    
+    steps:
+      
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_D93A9F4D3B674C08B989B82E07155D1A }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F55A8BF6243A4C9296D2846E03D3B677 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_FCB21E374B4147DCB89512668B858FF6 }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'HealthcareRAGChatBot'
+          slot-name: 'Production'
+          images: 'dockerprojectimages.azurecr.io/${{ secrets.AZUREAPPSERVICE_CONTAINERUSERNAME_3F89FEDB22B44B3986FE1836A61CD514 }}/healthcare-rag:${{ github.sha }}'
+          
