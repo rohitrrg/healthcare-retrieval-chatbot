@@ -2,14 +2,7 @@ import streamlit as st
 from retriever import MedicalRetriever
 from chain import Chain
 
-K_RETRIEVE = 4
-SIMILARITY_THRESHOLD = 0.6   # lower distance is better; we will check scores where available
-MAX_NEW_TOKENS = 384
-TEMPERATURE = 0.2
-TOP_P = 0.9
-
 INDEX_DIR = "data/faiss_index"
-
 
 st.set_page_config(page_title="Healthcare RAG System", page_icon="🩺", layout="centered")
 st.title("🩺  Healthcare Chatbot with Medical Document Retrieval")

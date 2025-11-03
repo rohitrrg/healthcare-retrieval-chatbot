@@ -1,12 +1,9 @@
 streamlit
-torch==2.8.0 --index-url https://download.pytorch.org/whl/cu128
-transformers
-accelerate
 langchain
 langchain_community
-langchain_huggingface
 langchain_core
-bitsandbytes
+langchain_openai
+langchain_huggingface
 sentence-transformers
 faiss-cpu
 sentencepiece
