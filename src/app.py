@@ -1,5 +1,4 @@
 import streamlit as st
-from llm import LLM
 from retriever import MedicalRetriever
 from chain import Chain
 
@@ -19,14 +18,9 @@ st.title("🩺  Healthcare Chatbot with Medical Document Retrieval")
 def load_and_index():
     return MedicalRetriever().retriever()
 
-@st.cache_resource(show_spinner=True, )
-def load_llm():
-    llm = LLM()
-    return llm
 
 vector_store = load_and_index()
-llm = load_llm()
-chain = Chain().build_chain(vector_store, llm)
+chain = Chain().build_chain(vector_store)
 
 with st.form("qa_form"):
     user_q = st.text_area("Ask a medical question (non-emergency):", value="What are early symptoms of dehydration?", height=120, placeholder="e.g., What are early symptoms of dehydration?")

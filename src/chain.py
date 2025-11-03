@@ -1,19 +1,22 @@
-from langchain.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableParallel, RunnableLambda, RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import PromptTemplate
+from langchain_openai import AzureChatOpenAI
 
 
 class Chain:
     def __init__(self):
         print('Building Chain !!')
+        self.llm = AzureChatOpenAI(
+                azure_deployment="gpt-5-mini",
+            )
         
     
     def format_docs(self, retrieved_docs):
         context_text = "\n\n".join(doc.page_content for doc in retrieved_docs)
         return context_text
     
-    def build_chain(self, retriever, llm):
+    def build_chain(self, retriever):
 
         parser = StrOutputParser()
 
@@ -36,6 +39,6 @@ class Chain:
            'question': RunnablePassthrough()
            })
         
-        main_chain = parallel_chain | prompt | llm | parser
+        main_chain = parallel_chain | prompt | self.llm | parser
 
         return main_chain
